@@ -18,8 +18,13 @@ const userSchema = new mongoose.Schema(
     surname: {
       type: String
     },
+    username: {
+      type: String,
+      unique: true
+    },
     email: {
-      type: String
+      type: String,
+      unique: true
     },
     password: {
       type: String
@@ -35,7 +40,29 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String
-    }
+    },
+    profilePicture: {
+      type: String,
+      default:
+        "https://thumbs.dreamstime.com/z/default-avatar-profile-flat-icon-vector-contact-symbol-illustration-184752213.jpg"
+    },
+    coverPicture: {
+      type: String,
+      default:
+        "https://www.summitbsa.org/wp-content/uploads/2019/10/placeholder.png"
+    },
+    followers: {
+      type: Array,
+      default: []
+    },
+    followings: {
+      type: Array,
+      default: []
+    },
+    desc: {
+      type: String
+    },
+    createdAt: { type: Date, required: true, default: Date.now }
     // tokens: [
     //   {
     //     token: {
@@ -62,4 +89,4 @@ userSchema.methods.generateAuthToken = async function () {
   }
 };
 
-module.exports = mongoose.model("Facebook", userSchema);
+module.exports = mongoose.model("User", userSchema);
