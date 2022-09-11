@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const fileupload = require("express-fileupload");
 // const bodyParser = require("body-parser");
 require("./DB/Config");
+const port= process.env.PORT || 5000;
 const userRoute = require("./Routes/Users");
 const postRoute = require("./Routes/Posts");
 const authRoute = require("./Routes/Auth");
@@ -51,7 +52,7 @@ app.use("/message", messageRoute);
 
 // to start server
 app.listen(5000, () => {
-  console.log("Db started at port 5000");
+  console.log(`Db started at port ${port}`);
 });
 
 // for socket io server
