@@ -51,7 +51,7 @@ app.use("/conversation", conversationRoute);
 app.use("/message", messageRoute);
 
 // to start server
-app.listen(5000, () => {
+app.listen(${port}, () => {
   console.log(`Db started at port ${port}`);
 });
 
