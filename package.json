@@ -16,7 +16,7 @@
     "socket.io": "4.5.2"
   },
   "scripts": {
-    "start": "index.js"
+    "start": "node index.js"
   },
   "devDependencies": {
     "@types/node": "^17.0.21"
