@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     members: { $all: [req.body.senderId, req.body.receiverId] }
   });
   if (present) {
-    res.status(200).json({ data: "chat exists" });
+   res.status(200).json({ status: "chat exists", data: present });
   } else {
     try {
       const savedConversation = await newConversation.save();
