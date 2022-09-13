@@ -55,4 +55,46 @@ app.listen(port, () => {
   console.log(`Db started at port ${port}`);
 });
 
+// for socket io server
+const io = require("socket.io")(${port}, {
+  cors: {
+    origin: "https://1h477z.csb.app"
+  }
+});
 
+let users = [];
+
+const adduser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
+
+const removeuser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getuser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
+io.on("connection", (socket) => {
+  socket.on("adduser", (userId) => {
+    adduser(userId, socket.id);
+    console.log(userId, socket.id);
+    io.emit("getusers", users);
+  });
+
+  socket.on("sendmessage", ({ senderId, receiverId, text }) => {
+    const user = getuser(receiverId);
+    io.to(user?.socketId).emit("getmessage", {
+      senderId,
+      text
+    });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("disconnect", socket.id);
+    removeuser(socket.id);
+    io.emit("getusers", users);
+  });
+});
