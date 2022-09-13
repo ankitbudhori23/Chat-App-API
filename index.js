@@ -56,7 +56,7 @@ app.listen(port, () => {
 });
 
 // for socket io server
-const io = require("socket.io")(${port}, {
+const io = require("socket.io")(6000, {
   cors: {
     origin: "https://1h477z.csb.app"
   }
