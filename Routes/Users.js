@@ -25,6 +25,35 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// find unique username is available
+router.post("/username", async (req, res) => {
+  let uname = await User.findOne({ username: req.body.username });
+  if (uname) {
+    res.json({ error: "This username exists" });
+  } else {
+    res.json({ success: "This username available" });
+  }
+});
+
+// update unique username
+router.put("/username/:id", async (req, res) => {
+  let uname = await User.findOne({ username: req.body.username });
+  if (uname) {
+    res.status(500).json({ error: "This username exists" });
+  } else {
+    if (req.body.userId === req.params.id) {
+      const d = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          username: req.body.username
+        },
+        { new: true }
+      );
+      res.status(200).json({ user: d });
+    }
+  }
+});
+
 // delete user profile
 router.delete("/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
