@@ -2,13 +2,13 @@ const express = require("express");
 const router = express();
 const User = require("../DB/User");
 
-//get all posts
+//get all users
 router.get("/", async (req, res) => {
   const alluser = await User.find().sort({ $natural: -1 });
   res.json({ data: alluser });
 });
 
-// update user profile.
+// update user profile
 router.put("/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
     try {
@@ -27,11 +27,15 @@ router.put("/:id", async (req, res) => {
 
 // find unique username is available
 router.post("/username", async (req, res) => {
-  let uname = await User.findOne({ username: req.body.username });
-  if (uname) {
-    res.json({ error: "This username exists" });
+  if (!req.body.username) {
+    res.json({ error: "Enter username" });
   } else {
-    res.json({ success: "This username available" });
+    let uname = await User.findOne({ username: req.body.username });
+    if (uname) {
+      res.json({ error: "This username exists" });
+    } else {
+      res.json({ success: "This username available" });
+    }
   }
 });
 
@@ -65,6 +69,29 @@ router.delete("/:id", async (req, res) => {
     }
   } else {
     return res.status(403).json("You can delete only your account!");
+  }
+});
+
+// search a user by name and username
+router.get("/search/:name", async (req, res) => {
+  const name = req.params.name;
+  let finduser = await User.find({
+    $or: [
+      {
+        firstname: { $regex: name, $options: "i" }
+      },
+      {
+        surname: { $regex: name, $options: "i" }
+      },
+      {
+        username: { $regex: name, $options: "i" }
+      }
+    ]
+  }).select("firstname surname username");
+  if (finduser.length > 0) {
+    return res.json({ user: finduser });
+  } else {
+    return res.status(404).json({ error: `No user found` });
   }
 });
 
